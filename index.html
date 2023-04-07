@@ -1,0 +1,79 @@
+// machine details
+var powerRating = 3;
+var lvVolatge = 115;
+var hvVoltage = 230;
+
+// tabular column
+// OC TEST
+var Voc = 115;
+var Ioc = 1.75;
+var Woc = 65;
+// sc TEST
+var Vsc = 10;
+var Isc = 13;
+var Wsc = 80;
+
+// calculaton
+// oc Test
+var cosfi0 = Woc / (Voc * Ioc);
+console.log("cosfi0 : " + cosfi0);
+var fi = (Math.acos(cosfi0) * 180) / Math.PI;
+console.log("fi : " + fi);
+var Iw = Ioc * cosfi0;
+console.log(" Iw : " + Iw);
+var Iu = Ioc * Math.sin(fi);
+console.log("Iu : " + Iu);
+var Roc = Voc / Iw;
+console.log("Roc : " + Roc);
+var Xoc = Voc / Iu;
+console.log("Xo : " + Xoc);
+console.log("-----------------------");
+console.log("SC Test");
+var Z01 = Vsc / Isc;
+console.log(" Z01 : " + Z01);
+var R01 = Wsc / Math.pow(Isc, 2);
+console.log("RO1 : " + R01);
+var X01 = Math.sqrt(Math.pow(Z01, 2) - Math.pow(R01, 2));
+console.log("X01 : " + X01);
+var K = lvVolatge / hvVoltage;
+console.log("k : " + K);
+var R02 = R01 * Math.pow(K, 2);
+console.log("R02 : " + R02);
+var X02 = X01 * Math.pow(K, 2);
+console.log("X02 : " + X02);
+var I2dash = (powerRating * 1000) / hvVoltage;
+console.log("I2' : " + I2dash);
+var V2dash = lvVolatge / K;
+console.log("V2' : " + V2dash);
+// Predetermine the efficiency cosfi( .8)
+console.log("Predetermine the efficiency cosfi( .8)");
+var cosfi = 0.8; //cosfi
+var X = 3 / 4; // load factor
+console.log("load factor : " + X);
+var outputPower = X * powerRating * 1000 * cosfi;
+console.log("Output Power : " + outputPower);
+var copperLoss = Math.pow(X, 2) * Wsc;
+console.log("Copper Loss : " + copperLoss);
+var coreLoss = Woc;
+console.log("core Loss : " + coreLoss);
+var inputPower = outputPower + coreLoss + copperLoss;
+console.log("Input Power : " + inputPower);
+var efficiency = (outputPower / inputPower) * 100;
+console.log("Efficiency : " + efficiency);
+// Predetermine the regulation of different power factor
+console.log("Predetermine the regulation of different power factor");
+var I2 = (powerRating * 1000) / hvVoltage;
+console.log("I2 : " + I2);
+// I1 = (powerRating * 1000) / hvVoltage;
+var precosfi = .4; // cosfi
+var prefi = (Math.acos(precosfi) * 180) / Math.PI;//Math.acos(precosfi);
+var presinfi = Math.sqrt(1 - Math.pow(precosfi, 2)); // sinfi
+console.log("cos fi : " + (precosfi));
+console.log("fi : " + prefi)
+console.log("sin fi : " + presinfi);
+var regulationLag = (I2 * (R02 * precosfi + X02 * presinfi)) / hvVoltage;
+console.log("regulationLag : " + regulationLag);
+
+var regulationLead =
+(I2 * (R02 * precosfi - X02 * presinfi)) / hvVoltage;
+console.log("regulationLead : " + regulationLead);
